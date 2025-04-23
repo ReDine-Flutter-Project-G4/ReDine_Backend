@@ -1,3 +1,7 @@
+Creating pull requests:
+- feat-[feature name] for new features
+- bug-[fix bug] for bug fixed
+
 To install dependencies:
 ```sh
 bun install
