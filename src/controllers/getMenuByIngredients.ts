@@ -48,11 +48,11 @@ export default async function getMenuByIngredients(c: Context) {
 
       const matchesCategories =
         categories.length === 0 ||
-        categories.every(cat => meal.strCategory?.toLowerCase().trim() === cat);
+        categories.some(cat => meal.strCategory?.toLowerCase().trim() === cat);
 
       const matchesNationalities =
         nationalities.length === 0 ||
-        nationalities.every(nat => meal.strArea?.toLowerCase().trim() === nat);
+        nationalities.some(nat => meal.strArea?.toLowerCase().trim() === nat);
 
       const isAllergySafe =
         allergies.length === 0 ||
