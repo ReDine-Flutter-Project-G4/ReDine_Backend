@@ -8,9 +8,6 @@ const app = new Hono()
 
 app.use('*', cors())
 app.use(logger())
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
 app.route('/api/menu', menu)
 app.route('/api/meta', meta)
 
@@ -18,7 +15,7 @@ Bun.serve({
   fetch(req) {
     return app.fetch(req)
   },
-  port: 3001,
+  port: 3000,
 })
 
 export default app
