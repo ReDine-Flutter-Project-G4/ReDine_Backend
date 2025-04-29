@@ -9,14 +9,14 @@ export default async function getMenuByIngredients(c: Context) {
         .filter(Boolean);
 
     const ingredients = parseList('ingredients');
-    const allergies = parseList('allergies');
+    const avoidances = parseList('avoidances');
     const categories = parseList('category');
     const nationalities = parseList('nationality');
 
     // If all filters are empty, return error
     if (
       ingredients.length === 0 &&
-      allergies.length === 0 &&
+      avoidances.length === 0 &&
       categories.length === 0 &&
       nationalities.length === 0
     ) {
@@ -54,14 +54,14 @@ export default async function getMenuByIngredients(c: Context) {
         nationalities.length === 0 ||
         nationalities.some(nat => meal.strArea?.toLowerCase().trim() === nat);
 
-      const isAllergySafe =
-        allergies.length === 0 ||
-        allergies.every(allergy =>
-          mealIngredients.every(ing => ing !== allergy)
+      const isAvoidanceSafe =
+        avoidances.length === 0 ||
+        avoidances.every(avoidance =>
+          mealIngredients.every(ing => ing !== avoidance)
         );
 
 
-      return hasAllIngredients && matchesCategories && matchesNationalities && isAllergySafe;
+      return hasAllIngredients && matchesCategories && matchesNationalities && isAvoidanceSafe;
     });
 
     return c.json({ meals: filtered }, 200);
