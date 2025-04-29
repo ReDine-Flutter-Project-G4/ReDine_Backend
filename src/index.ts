@@ -12,7 +12,7 @@ app.get('/', (c) => {
   return c.text('Hello Hono!')
 })
 app.route('/api/menu', menu)
-app.route('/api', meta)
+app.route('/api/meta', meta)
 
 Bun.serve({
   fetch(req) {
