@@ -57,7 +57,7 @@ export default async function getMenuByIngredients(c: Context) {
       const isAvoidanceSafe =
         avoidances.length === 0 ||
         avoidances.every(avoidance =>
-          mealIngredients.every(ing => ing !== avoidance)
+          mealIngredients.every(ing => !ing.includes(avoidance))
         );
 
 
