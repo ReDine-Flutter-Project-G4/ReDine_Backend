@@ -1,4 +1,5 @@
 import type { Context } from 'hono'
+import { rtdb } from '../utils/firebase';
 
 export default async function getMenuByIngredients(c: Context) {
   try {
@@ -23,18 +24,14 @@ export default async function getMenuByIngredients(c: Context) {
       return c.json({ message: 'No filters provided' }, 400);
     }
 
-    const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
-    const fetches = alphabet.map(letter =>
-      fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${letter}`)
-        .then(res => res.json())
-        .then(data => data.meals || [])
-        .catch(() => [])
-    );
+    const snapshot = await rtdb.ref('meals').once('value');
+    const data = snapshot.val();
 
-    const results = await Promise.all(fetches);
-    const allMeals = results.flat();
+    if (!data) {
+      return c.json({ meals: [], message: 'No meals found' }, 200);
+    }
 
-    const filtered = allMeals.filter((meal: any) => {
+    const filteredMeals = data.filter((meal: any) => {
       const mealIngredients: string[] = [];
 
       for (let i = 1; i <= 20; i++) {
@@ -64,7 +61,7 @@ export default async function getMenuByIngredients(c: Context) {
       return hasAllIngredients && matchesCategories && matchesNationalities && isAvoidanceSafe;
     });
 
-    return c.json({ meals: filtered }, 200);
+    return c.json({ meals: filteredMeals }, 200);
   } catch (error) {
     console.error('Error fetching menu by ingredients:', error);
     return c.json({ message: 'Internal server error' }, 500);
