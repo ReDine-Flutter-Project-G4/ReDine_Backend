@@ -1,15 +1,16 @@
 import type { Context } from 'hono'
+import { rtdb } from '../utils/firebase';
 
 export default async function getAllAreas(c: Context) {
       try {
-            const res = await fetch("https://www.themealdb.com/api/json/v1/1/list.php?a=list");
-            const data = await res.json();
+            const snapshot = await rtdb.ref('areas').once('value');
+            const data = snapshot.val();
 
-            const areas: any[] = (data.meals || []).map((area: any) => (
-                  area.strArea
-            ));
+            if (!data) {
+                  return c.json({ areas: [], message: 'No areas found' }, 200);
+            }
 
-            return c.json({ areas });
+            return c.json({ areas: data });
       } catch (error) {
             console.error('Error fetching areas:', error)
             return c.json({ message: 'Internal server error' }, 500)

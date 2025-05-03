@@ -1,18 +1,18 @@
-import type { Context } from 'hono'
+import type { Context } from 'hono';
+import { rtdb } from '../utils/firebase';
 
-export default async function getAllIngredient(c: Context) {
-      try {
-            const res = await fetch("https://www.themealdb.com/api/json/v1/1/list.php?i=list");
-            const data = await res.json();
+export default async function getIngredients(c: Context) {
+  try {
+    const snapshot = await rtdb.ref('ingredients').once('value');
+    const data = snapshot.val();
 
-            const ingredients: any[] = (data.meals || []).map((ingredient: any) => (
-                  ingredient.strIngredient
-            ));
+    if (!data) {
+      return c.json({ ingredients: [], message: 'No ingredients found' }, 200);
+    }
 
-            return c.json({ ingredients });
-      } catch (error) {
-            console.error('Error fetching ingredients:', error)
-            return c.json({ message: 'Internal server error' }, 500)
-      }
+    return c.json({ ingredients: data }, 200);
+  } catch (err) {
+    console.error('❌ RTDB error:', err);
+    return c.json({ message: 'Failed to load ingredients' }, 500);
+  }
 }
-
