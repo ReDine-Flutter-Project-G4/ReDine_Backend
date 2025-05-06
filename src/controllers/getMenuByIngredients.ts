@@ -50,7 +50,7 @@ export default async function getMenuByIngredients(c: Context) {
         if (ing) mealIngredients.push(ing);
       }
 
-      const hasAllIngredients = ingredients.length === 0 || ingredients.every(ing =>
+      const hasAllIngredients = ingredients.length === 0 || ingredients.some(ing =>
         mealIngredients.some(mealIng => mealIng.includes(ing))
       );
 
