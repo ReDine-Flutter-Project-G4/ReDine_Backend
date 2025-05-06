@@ -79,23 +79,29 @@ export default async function getMenuByIngredients(c: Context) {
 
     const userIngredientsSet = new Set(ingredients);
 
-    const mealsWithMissingCount = filteredMeals.map((meal: any): { missingCount: number; [key: string]: any } => {
+    const mealsWithScores = filteredMeals.map((meal: any): { matchCount: number; missingCount: number;[key: string]: any } => {
       const mealIngredients: string[] = [];
       for (let i = 1; i <= 20; i++) {
-        const ing = meal[`strIngredient${i}`]?.toLowerCase().trim();
-        if (ing) mealIngredients.push(ing);
+        const ing = meal[`strIngredient${i}`];
+        if (typeof ing === 'string') {
+          const cleaned = ing.toLowerCase().trim();
+          if (cleaned) mealIngredients.push(cleaned);
+        }
       }
 
-      const missingCount = mealIngredients.filter(
-        ing => !userIngredientsSet.has(ing)
-      ).length;
+      const matchCount = mealIngredients.filter(ing => userIngredientsSet.has(ing)).length;
+      const missingCount = mealIngredients.length - matchCount;
 
-      return { ...meal, missingCount };
+      return { ...meal, matchCount, missingCount };
     });
 
-    mealsWithMissingCount.sort((a: { missingCount: number }, b: { missingCount: number }) => a.missingCount - b.missingCount);
+    mealsWithScores.sort(
+      (a: { matchCount: number; missingCount: number; }, b: { matchCount: number; missingCount: number; }) =>
+        b.matchCount - a.matchCount ||
+        a.missingCount - b.missingCount
+    );
 
-    const sortedMeals = mealsWithMissingCount.map(({ missingCount, ...meal }: { missingCount: number; [key: string]: any }) => meal);
+    const sortedMeals = mealsWithScores.map(({ matchCount, missingCount, ...meal }: { matchCount: number; missingCount: number;[key: string]: any }) => meal);
 
     return c.json({ meals: sortedMeals }, 200);
   } catch (error) {
