@@ -1,5 +1,5 @@
 import type { Context } from 'hono';
-import { rtdb } from '../utils/firebase';
+import { rtdb } from '../../utils/firebase';
 
 export default async function getMenuSuggestion(c: Context) {
     try {

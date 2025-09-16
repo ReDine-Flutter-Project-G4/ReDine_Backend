@@ -1,10 +1,11 @@
+import type { areasPayload } from '../../types/area.type';
 import type { Context } from 'hono'
-import { rtdb } from '../utils/firebase';
+import { rtdb } from '../../utils/firebase';
 
 export default async function getAllAreas(c: Context) {
       try {
             const snapshot = await rtdb.ref('areas').once('value');
-            const data = snapshot.val();
+            const data: areasPayload[] = snapshot.val();
 
             if (!data) {
                   return c.json({ areas: [], message: 'No areas found' }, 200);

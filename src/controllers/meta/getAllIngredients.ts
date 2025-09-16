@@ -1,10 +1,11 @@
 import type { Context } from 'hono';
-import { rtdb } from '../utils/firebase';
+import { rtdb } from '../../utils/firebase';
+import type { ingredientsPayload } from '../../types/ingredients.type';
 
 export default async function getIngredients(c: Context) {
   try {
     const snapshot = await rtdb.ref('ingredients').once('value');
-    const data = snapshot.val();
+    const data: ingredientsPayload[] = snapshot.val();
 
     if (!data) {
       return c.json({ ingredients: [], message: 'No ingredients found' }, 200);
