@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import getProxyImage from '../controllers/getProxyImage'
+import getProxyImage from '../controllers/proxy/getProxyImage'
 
 const proxyImage = new Hono()
 

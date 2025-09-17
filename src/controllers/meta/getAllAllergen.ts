@@ -1,10 +1,11 @@
 import type { Context } from 'hono'
-import { rtdb } from '../utils/firebase';
+import { rtdb } from '../../utils/firebase';
+import type { allergensPayload } from '../../types/allergens.type';
 
 export default async function getAllAllergen(c: Context) {
     try {
         const snapshot = await rtdb.ref('allergens').once('value');
-        const data = snapshot.val();
+        const data: allergensPayload[] = snapshot.val();
         if (!data) {
             return c.json({ allergen: [], message: 'No allergen found' }, 200);
         }

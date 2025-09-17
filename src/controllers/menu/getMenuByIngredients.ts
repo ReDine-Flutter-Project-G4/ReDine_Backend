@@ -1,5 +1,5 @@
 import type { Context } from 'hono'
-import { rtdb } from '../utils/firebase';
+import { rtdb } from '../../utils/firebase';
 
 export default async function getMenuByIngredients(c: Context) {
   try {
@@ -9,11 +9,11 @@ export default async function getMenuByIngredients(c: Context) {
         .map(i => i.trim().toLowerCase())
         .filter(Boolean);
 
-    const ingredients = parseList('ingredients');
-    const avoidances = parseList('avoids');
-    const categories = parseList('category');
-    const nationalities = parseList('nationality');
-    const allergens = parseList('allergens');
+    const ingredients: string[] = parseList('ingredients');
+    const avoidances: string[] = parseList('avoids');
+    const categories: string[] = parseList('category');
+    const nationalities: string[] = parseList('nationality');
+    const allergens: string[] = parseList('allergens');
 
     if (
       ingredients.length === 0 &&
