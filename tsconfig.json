@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es2021",
     "module": "esnext",
+    "resolveJsonModule": true,
     "moduleResolution": "node",
     "strict": true,
     "esModuleInterop": true,

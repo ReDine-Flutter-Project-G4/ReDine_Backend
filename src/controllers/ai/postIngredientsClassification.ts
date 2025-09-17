@@ -5,8 +5,6 @@ import axiosInstance from '../../utils/axiosInstances';
 import { rtdb } from '../../utils/firebase';
 import ingredientNormalize from '../../utils/ingredientNormalize'
 
-import type { ingredientsPayload } from '../../types/ingredients.type';
-
 export default async function postImageClassification(c: Context) {
     try {
         const body = await c.req.parseBody();
@@ -16,17 +14,16 @@ export default async function postImageClassification(c: Context) {
         const buffer = Buffer.from(arrayBuffer);
 
         const form = new FormData();
-        form.append("file", new Blob([buffer]), file.name);
+        form.append("file", buffer, file.name);
 
-        const res = await axiosInstance.post("/api/ai/ingredients/detect", form, {
-            headers: form.getHeaders ? form.getHeaders() : {},
-        });
-
+        const res = await axiosInstance.post(
+            "/api/ai/ingredients/detect",
+            form,
+            { headers: form.getHeaders() }
+        );
         const snapshot = await rtdb.ref('ingredients').once('value');
-        const data: ingredientsPayload[] = snapshot.val();
-        const flatData = data.map(item => item.ingredients);
-
-        const normalizeIng = ingredientNormalize(res.data.detected_ingredients, flatData);
+        const data: string[] = snapshot.val();
+        const normalizeIng = ingredientNormalize(res.data.detected_ingredients, data);
         return c.json({ ingredients: normalizeIng });
     } catch (error) {
         console.error('Error image classification:', error);
