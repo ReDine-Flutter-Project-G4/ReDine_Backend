@@ -12,4 +12,4 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["bun", "run", "dev"]
+CMD ["bun", "start"]
