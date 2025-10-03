@@ -2,9 +2,7 @@ FROM oven/bun:latest
 
 WORKDIR /app
 
-COPY bun.lock package.json ./
-
-COPY serviceAccountKey.json ./app
+COPY bun.lock package.json serviceAccountKey.json /
 
 RUN bun install
 
