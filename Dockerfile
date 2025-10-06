@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["bun", "start"]
+CMD ["bun", "src/index.ts"]
