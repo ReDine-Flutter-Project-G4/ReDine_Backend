@@ -26,6 +26,6 @@ app.route('/api/ai', ai)
 app.route('/api/proxy-image', proxyImage)
 
 export default {
-  port: 5000,
+  port: 3000,
   fetch: app.fetch,
 } 
